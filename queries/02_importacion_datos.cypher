@@ -23,8 +23,8 @@ AS row
 CREATE (:Materia {
     id: row.id,
     nombre: row.nombre,
-    area: row.area, 
-})
+    creditos: toInteger(row.creditos)
+});
 
 // -------------------------------------Importar datos de profesores -------------------------------------
 LOAD CSV WITH HEADERS FROM
@@ -35,7 +35,7 @@ CREATE (:Profesor {
     id: row.id,
     nombre: row.nombre,
     departamento: row.departamento
-})
+});
 
 // ------------------------------------- Importar datos de inscripciones -------------------------------------
 LOAD CSV WITH HEADERS FROM
@@ -46,7 +46,7 @@ CREATE (:Inscripcion {
     materia_id: row.materia_id,
     estudiante_id: row.estudiante_id,
     calificacion: toFloat(row.calificacion)
-})
+});
 
 // ------------------------------------- Importar datos de amistades -------------------------------------
 LOAD CSV WITH HEADERS FROM
@@ -55,7 +55,7 @@ AS row
 CREATE (:Amistad {
     estudiante_origen: row.estudiante_origen,
     estudiante_destino: row.estudiante_destino
-})
+});
 
 // ------------------------------------- Importar datos de imparticiones -------------------------------------
 LOAD CSV WITH HEADERS FROM
@@ -64,4 +64,4 @@ AS row
 CREATE (:Imparticion {
     profesor_id: row.profesor_id,
     materia_id: row.materia_id
-})
+});
