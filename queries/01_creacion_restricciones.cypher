@@ -1,0 +1,12 @@
+CREATE CONSTRAINT estudiante_id IF NOT EXISTS
+FOR (e:Estudiante)
+REQUIRE e.id IS UNIQUE;
+
+CREATE CONSTRAINT materia_id IF NOT EXISTS
+FOR (m:Materia)
+REQUIRE m.id IS UNIQUE;
+
+CREATE CONSTRAINT profesor_id IF NOT EXISTS
+FOR (p:Profesor)
+REQUIRE p.id IS UNIQUE;
+
