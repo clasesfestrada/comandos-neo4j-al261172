@@ -1,0 +1,90 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: estructura
+      id: estructura
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: estructura
+        setup-command: ''
+        command: 'bash scripts/check_structure.sh '
+        timeout: 10
+        max-score: 10
+    - name: restricciones
+      id: restricciones
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: restricciones
+        setup-command: ''
+        command: bash scripts/check_01_restricciones.sh
+        timeout: 10
+        max-score: 15
+    - name: importation
+      id: importation
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: importation
+        setup-command: ''
+        command: bash scripts/check_02_importacion.sh
+        timeout: 10
+        max-score: 20
+    - name: consultasbasicas
+      id: consultasbasicas
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: consultasbasicas
+        setup-command: ''
+        command: bash scripts/check_03_consultas_basicas.sh
+        timeout: 10
+        max-score: 20
+    - name: crud
+      id: crud
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: crud
+        setup-command: ''
+        command: bash scripts/check_04_crud.sh
+        timeout: 10
+        max-score: 20
+    - name: relaciones
+      id: relaciones
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: relaciones
+        setup-command: ''
+        command: bash scripts/check_05_relaciones.sh
+        timeout: 10
+        max-score: 10
+    - name: evidencias
+      id: evidencias
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: evidencias
+        setup-command: ''
+        command: bash scripts/check_evidencias.sh
+        timeout: 10
+        max-score: 5
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        ESTRUCTURA_RESULTS: "${{steps.estructura.outputs.result}}"
+        RESTRICCIONES_RESULTS: "${{steps.restricciones.outputs.result}}"
+        IMPORTATION_RESULTS: "${{steps.importation.outputs.result}}"
+        CONSULTASBASICAS_RESULTS: "${{steps.consultasbasicas.outputs.result}}"
+        CRUD_RESULTS: "${{steps.crud.outputs.result}}"
+        RELACIONES_RESULTS: "${{steps.relaciones.outputs.result}}"
+        EVIDENCIAS_RESULTS: "${{steps.evidencias.outputs.result}}"
+      with:
+        runners: estructura,restricciones,importation,consultasbasicas,crud,relaciones,evidencias
