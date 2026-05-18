@@ -41,27 +41,26 @@ CREATE (:Profesor {
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/inscripciones.csv'
 AS row
-
-CREATE (:Inscripcion {
-    materia_id: row.materia_id,
-    estudiante_id: row.estudiante_id,
-    calificacion: toFloat(row.calificacion)
-});
+MATCH (e:Estudiante {id: row.estudiante_id})
+WITH e, row
+MATCH (m:Materia {id: row.materia_id})
+CREATE (e) - [:INSCRITO_EN {calificacion: toFloat(row.calificacion)}] -> (m);
 
 // ------------------------------------- Importar datos de amistades -------------------------------------
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/amistades.csv'
 AS row
-CREATE (:Amistad {
-    estudiante_origen: row.estudiante_origen,
-    estudiante_destino: row.estudiante_destino
-});
+
+MATCH (e_o:Estudiante {id: row.estudiante_origen})
+WITH e_o, row
+MATCH (e_d:Estudiante {id: row.estudiante_destino})
+CREATE (e_o) - [:AMIGO_DE] -> (e_d);
 
 // ------------------------------------- Importar datos de imparticiones -------------------------------------
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/imparticiones.csv'
 AS row
-CREATE (:Imparticion {
-    profesor_id: row.profesor_id,
-    materia_id: row.materia_id
-});
+MATCH (p:Profesor {id: row.profesor_id})
+WITH p, row
+MATCH (m:Materia {id: row.materia_id})
+CREATE (p) - [:IMPARTE] -> (m);
