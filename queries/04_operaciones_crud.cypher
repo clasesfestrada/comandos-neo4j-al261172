@@ -53,3 +53,4 @@ DELETE r;
 // ------------------------------------- Eliminar un nodo -------------------------------------
 MATCH (e:Estudiante {id: 'E999'})
 DELETE e;
+
