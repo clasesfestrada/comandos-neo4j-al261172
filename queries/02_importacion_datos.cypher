@@ -42,15 +42,15 @@ LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/inscripciones.csv'
 AS row
 MATCH (e:Estudiante {id: row.estudiante_id})
-WITH e, row
 MATCH (m:Materia {id: row.materia_id})
-CREATE (e) - [:INSCRITO_EN {calificacion: toFloat(row.calificacion)}] -> (m);
+CREATE (e)-[:INSCRITO_EN]->(m)
 
 // ------------------------------------- Importar datos de amistades -------------------------------------
+CREATE (a:Foo {name:'x'})
+WITH a
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/amistades.csv'
 AS row
-
 MATCH (e_o:Estudiante {id: row.estudiante_origen})
 WITH e_o, row
 MATCH (e_d:Estudiante {id: row.estudiante_destino})
