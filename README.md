@@ -390,7 +390,7 @@ LOAD CSV WITH HEADERS FROM
 AS row
 CREATE (Estudiante {id: row.estudiante_origen}) -[:AMIGO_DE]-> (Estudiante {id:row.estudiante_destino});
 ```
-Una vez que investigué, me di cuenta que para ese tipo de casos se utiliza como mejor práctica el comando `MERGE` y para configurar las propiedades de la relación se utiliza `SET`.
+Una vez que investigué, me di cuenta que para ese tipo de casos se utiliza como mejor práctica el comando `MERGE`. La manera en que funciona es que busca primero si el nodo (o relación) ya existe con las propiedades especificadas; si no lo encuentra, lo crea. Así se evitan duplicados.
 ```
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/amistades.csv'
