@@ -5,62 +5,54 @@
 // ------------------------------------- Importar datos de estudiantes -------------------------------------
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/estudiantes.csv'
-
 AS row
-
-CREATE (:Estudiante {
-  id: row.id,
-  nombre: row.nombre,
-  carrera: row.carrera,
-  semestre: toInteger(row.semestre)
+CREATE (e:Estudiante {
+   nombre: row.nombre,
+   id: row.id,
+   carrera: row.carrera,
+   semestre: toInteger(row.semestre)
 });
 
-// ------------------------------------- Importar datos de materias -------------------------------------
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/materias.csv'
 AS row
-
-CREATE (:Materia {
-    id: row.id,
+CREATE (m:Materia {
     nombre: row.nombre,
+    id: row.id,
+    area: row.area,
     creditos: toInteger(row.creditos)
 });
 
-// -------------------------------------Importar datos de profesores -------------------------------------
+
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/profesores.csv'
 AS row
-
-CREATE (:Profesor {
-    id: row.id,
+CREATE (p:Profesor {
     nombre: row.nombre,
+    id: row.id,
     departamento: row.departamento
 });
 
-// ------------------------------------- Importar datos de inscripciones -------------------------------------
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/inscripciones.csv'
 AS row
-MATCH (e:Estudiante {id: row.estudiante_id})
-MATCH (m:Materia {id: row.materia_id})
-CREATE (e)-[:INSCRITO_EN]->(m)
+MERGE (e:Estudiante {id:row.estudiante_id})
+MERGE (m:Materia {id:row.materia_id})
+MERGE (e)-[r:INSCRITO_EN]->(m)
+ON CREATE SET r.calificacion = toFloat(row.calificacion);
 
-// ------------------------------------- Importar datos de amistades -------------------------------------
-CREATE (a:Foo {name:'x'})
-WITH a
+
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/amistades.csv'
 AS row
-MATCH (e_o:Estudiante {id: row.estudiante_origen})
-WITH e_o, row
-MATCH (e_d:Estudiante {id: row.estudiante_destino})
-CREATE (e_o) - [:AMIGO_DE] -> (e_d);
+MERGE (e1:Estudiante {id: row.estudiante_origen})
+MERGE (e2:Estudiante {id: row.estudiante_destino})
+MERGE (e1)-[:AMIGO_DE]->(e2);
 
-// ------------------------------------- Importar datos de imparticiones -------------------------------------
+
 LOAD CSV WITH HEADERS FROM
 'https://raw.githubusercontent.com/clasesfestrada/comandos-neo4j-al261172/refs/heads/main/data/imparticiones.csv'
 AS row
-MATCH (p:Profesor {id: row.profesor_id})
-WITH p, row
-MATCH (m:Materia {id: row.materia_id})
-CREATE (p) - [:IMPARTE] -> (m);
+MERGE (p:Profesor {id: row.profesor_id})
+MERGE (m:Materia {id: row.materia_id})
+MERGE (p)-[:IMPARTE]->(m);
